@@ -1,0 +1,58 @@
+{
+  "name": "dsh-model-grid",
+  "version": "1.0.0",
+  "description": "Turn the DeepSeek Harness composer model picker into a responsive card grid, grouped by provider. Host-only, no client bundle rebuild.",
+  "type": "module",
+  "main": "./index.js",
+  "exports": {
+    ".": "./index.js",
+    "./css": "./css.js",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "index.js",
+    "css.js",
+    "cordis.patch.yml",
+    "README.md",
+    "LICENSE",
+    "docs"
+  ],
+  "scripts": {
+    "test": "node --test"
+  },
+  "keywords": [
+    "dsh",
+    "dsh-plugin",
+    "deepseek-harness",
+    "deepseek",
+    "model-picker",
+    "model-selection",
+    "grid",
+    "dropdown",
+    "ui"
+  ],
+  "author": "Jackson Yao",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/anonamerjaxon-dev/dsh-model-grid.git"
+  },
+  "homepage": "https://github.com/anonamerjaxon-dev/dsh-model-grid",
+  "bugs": {
+    "url": "https://github.com/anonamerjaxon-dev/dsh-model-grid/issues"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "compatibility": {
+      "dshReleases": {
+        "0.2.1-rc.2": "compatible"
+      },
+      "node": ">=22"
+    }
+  }
+}

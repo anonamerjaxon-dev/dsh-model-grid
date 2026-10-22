@@ -1,0 +1,16 @@
+# dsh-model-grid bundle patch.
+#
+# Host-only: registers a `webserver/index-inject` listener that appends the
+# grid stylesheet to the page <head>. No client bundle is touched.
+#
+# `config` is passed to apply() and merged with DEFAULT_CONFIG (see css.js and
+# README.md). Example:
+#
+#   config:
+#     maxWidth: 1100
+#     minCardWidth: 180
+#     hideCountdown: false
+- insert:
+    - id: model-grid
+      name: 'dsh-model-grid'
+      config: {}
