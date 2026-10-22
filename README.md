@@ -99,6 +99,21 @@ node --test
 
 The test suite covers config defaults/clamping, both picker selector sets, the countdown toggle, and the injection table.
 
+### Maintainer: registry submission
+
+Listing in the [awesome-dsh-plugin](https://github.com/awesome-dsh-plugin/awesome-dsh-plugin)
+registry is a one-file pull request. The `scripts/` helpers automate it:
+
+```sh
+scripts/submit-to-market.sh --dry-run   # validate, change nothing
+scripts/submit-to-market.sh             # open the PR
+scripts/schedule-submit.sh              # one-shot launchd timer for the first eligible moment
+scripts/schedule-submit.sh --uninstall  # remove the timer
+```
+
+The registry's CI enforces a **1-day minimum repository age**, which is exactly
+what `schedule-submit.sh` waits for. See [`scripts/README.md`](scripts/README.md).
+
 ## License
 
 [MIT](LICENSE) © 2026 Jackson Yao
