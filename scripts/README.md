@@ -35,3 +35,8 @@ scripts/schedule-submit.sh --uninstall  # remove the timer
 
 The job logs to `~/Library/Logs/dsh-model-grid-submit.log`. launchd runs a
 calendar job that was missed while the Mac slept once it wakes.
+
+> **macOS TCC note.** launchd's `/bin/bash` cannot read files under
+> `~/Documents`, `~/Desktop` or `~/Downloads` (`Operation not permitted`). That
+> is why the installer copies the submit script to
+> `~/.dsh/bin/dsh-model-grid-submit.sh` and points the job there.

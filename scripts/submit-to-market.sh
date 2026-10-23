@@ -93,11 +93,22 @@ if gh api "repos/${UPSTREAM}/contents/${ENTRY}" >/dev/null 2>&1; then
   exit 0
 fi
 
-existing_pr=$(gh pr list --repo "$UPSTREAM" --head "${OWNER}:${BRANCH}" \
-  --state open --json number --jq '.[0].number // empty')
+# `gh pr list --head owner:branch` does not reliably match fork heads, so use
+# the REST filter, which is authoritative.
+existing_pr=$(gh api "repos/${UPSTREAM}/pulls?head=${OWNER}:${BRANCH}&state=open" \
+  --jq '.[0].number // empty')
 if [ -n "$existing_pr" ]; then
   log "PR #${existing_pr} is already open; nothing to do"
   exit 0
+fi
+
+# A closed PR on this branch means a re-run would force-reset the branch and
+# auto-close it again (that is how #8945 died). Use a unique branch instead.
+any_pr=$(gh api "repos/${UPSTREAM}/pulls?head=${OWNER}:${BRANCH}&state=all" \
+  --jq '.[0].number // empty')
+if [ -n "$any_pr" ]; then
+  BRANCH="${BRANCH}-$(date +%s)"
+  log "branch was used by closed PR #${any_pr}; using ${BRANCH}"
 fi
 
 # ---------------------------------------------------------------- the entry

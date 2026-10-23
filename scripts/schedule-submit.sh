@@ -16,6 +16,10 @@ REPO="dsh-model-grid"
 LABEL="com.jackson.dsh-model-grid-submit"
 HERE="$(cd "$(dirname "$0")" && pwd)"
 SCRIPT="$HERE/submit-to-market.sh"
+# launchd's /bin/bash cannot read ~/Documents (macOS TCC), so the job runs a
+# copy installed outside the protected folders.
+SAFE_DIR="$HOME/.dsh/bin"
+SAFE_SCRIPT="$SAFE_DIR/dsh-model-grid-submit.sh"
 PLIST="$HOME/Library/LaunchAgents/$LABEL.plist"
 LOG="$HOME/Library/Logs/dsh-model-grid-submit.log"
 DOMAIN="gui/$(id -u)"
@@ -64,7 +68,7 @@ PLIST_XML=$(cat <<XML
   <key>ProgramArguments</key>
   <array>
     <string>/bin/bash</string>
-    <string>$SCRIPT</string>
+    <string>$SAFE_SCRIPT</string>
   </array>
   <key>StartCalendarInterval</key>
   <dict>
@@ -97,12 +101,14 @@ if [ "$DRY_RUN" -eq 1 ]; then
   exit 0
 fi
 
-mkdir -p "$(dirname "$PLIST")" "$(dirname "$LOG")"
+mkdir -p "$SAFE_DIR" "$(dirname "$PLIST")" "$(dirname "$LOG")"
+install -m 755 "$SCRIPT" "$SAFE_SCRIPT"
 printf '%s\n' "$PLIST_XML" > "$PLIST"
 
 launchctl bootout "$DOMAIN/$LABEL" 2>/dev/null || true
 launchctl bootstrap "$DOMAIN" "$PLIST"
 echo "installed: $PLIST"
+echo "job runs:  $SAFE_SCRIPT"
 echo "log:       $LOG"
 echo "cancel:    $0 --uninstall"
 launchctl print "$DOMAIN/$LABEL" 2>/dev/null | grep -E "state|next fire|program|runs" | head -6 || true
